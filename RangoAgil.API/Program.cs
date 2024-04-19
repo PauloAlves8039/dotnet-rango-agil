@@ -1,8 +1,9 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RangoAgil.API.Context;
-using RangoAgil.API.Entities;
+using RangoAgil.API.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,12 +11,15 @@ builder.Services.AddDbContext<RangoDbContext>(options =>
     options.UseSqlite(builder.Configuration["ConnectionStrings:RangoDbConnectionString"])
 );
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 var app = builder.Build();
 
 app.MapGet("/", () => "Rango Ágil");
 
-app.MapGet("/rangos", async Task<Results<NoContent, Ok<List<Rango>>>> 
-    (RangoDbContext rangoDbContext, 
+app.MapGet("/rangos", async Task<Results<NoContent, Ok<IEnumerable<RangoDTO>>>> 
+    (RangoDbContext rangoDbContext,
+    IMapper mapper,
     [FromQuery(Name = "name")] string? rangoNome) =>
 {
     var rangosEntity =  await rangoDbContext.Rangos
@@ -28,13 +32,26 @@ app.MapGet("/rangos", async Task<Results<NoContent, Ok<List<Rango>>>>
     }
     else 
     {
-        return TypedResults.Ok(rangosEntity);
+        return TypedResults.Ok(mapper.Map<IEnumerable<RangoDTO>>(rangosEntity));
     }
 });
 
-app.MapGet("/rango/{id:int}", async (RangoDbContext rangoDbContext, int id) =>
+app.MapGet("/rango/{rangoId:int}/ingredientes", async (
+    RangoDbContext rangoDbContext,
+    IMapper mapper,
+    int rangoId) => 
 {
-    return await rangoDbContext.Rangos.FirstOrDefaultAsync(r => r.Id == id);
+    return mapper.Map<IEnumerable<IngredienteDTO>> ((await rangoDbContext.Rangos
+                               .Include(rango => rango.Ingredientes)
+                               .FirstOrDefaultAsync(rango => rango.Id == rangoId))?.Ingredientes);
+});
+
+app.MapGet("/rango/{id:int}", async (
+    RangoDbContext rangoDbContext,
+    IMapper mapper,
+    int id) =>
+{
+    return mapper.Map<RangoDTO>(await rangoDbContext.Rangos.FirstOrDefaultAsync(r => r.Id == id));
 });
 
 app.Run();
