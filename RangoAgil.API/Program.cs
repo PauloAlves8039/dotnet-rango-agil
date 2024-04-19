@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RangoAgil.API.Context;
+using RangoAgil.API.Entities;
 using RangoAgil.API.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -52,6 +53,21 @@ app.MapGet("/rango/{id:int}", async (
     int id) =>
 {
     return mapper.Map<RangoDTO>(await rangoDbContext.Rangos.FirstOrDefaultAsync(r => r.Id == id));
+}).WithName("GetRango");
+
+app.MapPost("/rango", async Task<CreatedAtRoute<RangoDTO>> (
+    RangoDbContext rangoDbContext,
+    IMapper mapper, 
+    [FromBody] RangoParaCriacaoDTO rangoParaCriacaoDTO
+    ) => 
+{
+    var rangosEntity = mapper.Map<Rango>(rangoParaCriacaoDTO);
+    rangoDbContext.Add(rangosEntity);
+    await rangoDbContext.SaveChangesAsync();
+
+    var rangoToReturn = mapper.Map<RangoDTO>(rangosEntity);
+
+    return TypedResults.CreatedAtRoute(rangoToReturn, "GetRango", new { id = rangoToReturn.Id });
 });
 
 app.Run();
