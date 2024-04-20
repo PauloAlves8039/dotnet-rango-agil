@@ -7,13 +7,16 @@
 
 ## :computer: Projeto
 
-Repositório com WebAPI para fins acadêmicos voltados a estudos com Minimal API.
+Repositório com uma Minimal API para fins acadêmicos com objetivo de gerenciar listas de  `Rangos(refeições)` e seus  `Ingredientes`.
 
 ## ✔️ Recursos Utilizados
 
 - `.NET 8`
 - `C#`
-- `.NET WebAPI`
+- `.NET Minimal API`
+- `Entity Framework Core`
+- `SQLite`
+- `AutoMapper`
 
 ## :floppy_disk: Clonar Repositório
 
