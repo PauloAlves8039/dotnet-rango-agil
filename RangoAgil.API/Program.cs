@@ -70,4 +70,24 @@ app.MapPost("/rango", async Task<CreatedAtRoute<RangoDTO>> (
     return TypedResults.CreatedAtRoute(rangoToReturn, "GetRango", new { id = rangoToReturn.Id });
 });
 
+app.MapPut("/rango/{id:int}", async Task<Results<NotFound, Ok>> (
+    RangoDbContext rangoDbContext,
+    IMapper mapper,
+    int id,
+    [FromBody] RangoParaAtualizacaoDTO rangoParaAtualizacaoDTO) =>
+{
+    var rangosEntity = await rangoDbContext.Rangos.FirstOrDefaultAsync(r => r.Id == id);
+
+    if (rangosEntity == null) 
+    {
+        return TypedResults.NotFound();
+    }
+
+    mapper.Map(rangoParaAtualizacaoDTO, rangosEntity);
+
+    await rangoDbContext.SaveChangesAsync();
+
+    return TypedResults.Ok();
+});
+
 app.Run();
