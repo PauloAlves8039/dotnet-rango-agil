@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RangoAgil.API.Context;
-using RangoAgil.API.Handlers;
+using RangoAgil.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,20 +14,7 @@ var app = builder.Build();
 
 app.MapGet("/", () => "Rango Ágil");
 
-var rangoEndPoints = app.MapGroup("/rangos");
-var rangoIdEndPoints = rangoEndPoints.MapGroup("{rangoId:int}");
-var ingredientesEndPoints = rangoIdEndPoints.MapGroup("/ingredientes");
-
-rangoEndPoints.MapGet("", RangosHandlers.GetRangosAsync);
-
-ingredientesEndPoints.MapGet("", IngredientesHandlers.GetIngredientesAsync);
-
-rangoIdEndPoints.MapGet("", RangosHandlers.GetRangoById).WithName("GetRangos");
-
-rangoEndPoints.MapPost("", RangosHandlers.CreateRangoAsync);
-
-rangoIdEndPoints.MapPut("", RangosHandlers.UpdateRangoAsync);
-
-rangoIdEndPoints.MapDelete("", RangosHandlers.DeleteRangoAsync);
+app.RegisterRangosEndpoints();
+app.RegisterIngredientesEndpoints();
 
 app.Run();
