@@ -13,6 +13,7 @@ public static class RangosHandlers
     public static async Task<Results<NoContent, Ok<IEnumerable<RangoDTO>>>> GetRangosAsync
     (RangoDbContext rangoDbContext,
     IMapper mapper,
+    ILogger<RangoDTO> logger,
     [FromQuery(Name = "name")] string? rangoNome)
     {
         var rangosEntity = await rangoDbContext.Rangos
@@ -21,10 +22,12 @@ public static class RangosHandlers
 
         if (rangosEntity.Count <= 0 || rangosEntity == null)
         {
+            logger.LogInformation($"Lista de Rangos não encontrada: {rangosEntity}");
             return TypedResults.NoContent();
         }
         else 
         {
+            logger.LogInformation($"Retornando lista de Rangos: {rangosEntity}");
             return TypedResults.Ok(mapper.Map<IEnumerable<RangoDTO>>(rangosEntity));
         }
     }
@@ -32,12 +35,14 @@ public static class RangosHandlers
     public static async Task<Results<NotFound, Ok<RangoDTO>>> GetRangoById
     (RangoDbContext rangoDbContext,
      IMapper mapper,
+     ILogger<RangoDTO> logger,
      int rangoId)
     {
         var rangosEntity = await rangoDbContext.Rangos.FirstOrDefaultAsync(x => x.Id == rangoId);
 
         if (rangosEntity == null) 
         {
+            logger.LogInformation($"Rango por Id não encontrado: {rangoId}");
             return TypedResults.NotFound();
         }
             
@@ -57,12 +62,13 @@ public static class RangosHandlers
 
         var rangoToReturn = mapper.Map<RangoDTO>(rangosEntity);
 
-        return TypedResults.CreatedAtRoute(rangoToReturn, "GetRangos", new { rangoId = rangoToReturn.Id});
+        return TypedResults.CreatedAtRoute(rangoToReturn, "GetRangos", new { rangoId = rangoToReturn.Id });
     }
 
     public static async Task<Results<NotFound, Ok>> UpdateRangoAsync
     (RangoDbContext rangoDbContext,
      IMapper mapper,
+     ILogger<RangoDTO> logger,
      int rangoId,
      [FromBody] RangoParaAtualizacaoDTO rangoParaAtualizacaoDTO)
     {
@@ -70,6 +76,7 @@ public static class RangosHandlers
 
         if (rangosEntity == null) 
         {
+            logger.LogInformation($"Não foi possível atualizar Rango com Id: {rangoId}");
             return TypedResults.NotFound();
         }
 
@@ -80,12 +87,16 @@ public static class RangosHandlers
         return TypedResults.Ok();
     }
 
-    public static async Task<Results<NotFound, NoContent>> DeleteRangoAsync(RangoDbContext rangoDbContext, int rangoId)
+    public static async Task<Results<NotFound, NoContent>> DeleteRangoAsync
+    (RangoDbContext rangoDbContext,
+     ILogger<RangoDTO> logger,
+     int rangoId)
     {
         var rangosEntity = await rangoDbContext.Rangos.FirstOrDefaultAsync(r => r.Id == rangoId);
 
         if (rangosEntity == null)
         {
+            logger.LogInformation($"Não foi possível excluir Rango com Id: {rangoId}");
             return TypedResults.NotFound();
         }
 
