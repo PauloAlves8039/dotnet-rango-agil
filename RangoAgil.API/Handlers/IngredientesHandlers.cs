@@ -11,11 +11,14 @@ public static class IngredientesHandlers
     public static async Task<Results<NotFound, Ok<IEnumerable<IngredienteDTO>>>> GetIngredientesAsync(
     RangoDbContext rangoDbContext,
     IMapper mapper,
+    ILogger<RangoDTO> logger,
     int rangoId)
     {
         var rangosEntity = await rangoDbContext.Rangos.FirstOrDefaultAsync(x => x.Id == rangoId);
+
         if (rangosEntity == null) 
         {
+            logger.LogInformation($"Não foram encontrados Ingredientes para o Rango com Id: {rangoId}");
             return TypedResults.NotFound();
         }
             
