@@ -12,13 +12,20 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddProblemDetails();
 
-var app = builder.Build();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
-app.MapGet("/", () => "Rango Ágil");
+var app = builder.Build();
 
 if (!app.Environment.IsDevelopment()) 
 {
     app.UseExceptionHandler();
+}
+
+if (app.Environment.IsDevelopment()) 
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.RegisterRangosEndpoints();
