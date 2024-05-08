@@ -21,14 +21,14 @@ public class RangoIsLockedFilter : IEndpointFilter
         {
             rangoId = context.GetArgument<int>(1);
         }
-        else 
+        else
         {
             throw new NotSupportedException("This filter is not supported for this scenario.");
         }
 
-        if (rangoId == _lockedRangoId) 
+        if (rangoId == _lockedRangoId)
         {
-            return TypedResults.Problem(new() 
+            return TypedResults.Problem(new()
             {
                 Status = 400,
                 Title = "Rango já é Perfeito, você não precisa modificar ou deletar esta receita",

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RangoAgil.API.Context;
 
@@ -10,9 +11,11 @@ using RangoAgil.API.Context;
 namespace RangoAgil.API.Migrations
 {
     [DbContext(typeof(RangoDbContext))]
-    partial class RangoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240508232348_IdentityTables")]
+    partial class IdentityTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.3");
