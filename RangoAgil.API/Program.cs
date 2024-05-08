@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using RangoAgil.API.Context;
@@ -8,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<RangoDbContext>(options =>
     options.UseSqlite(builder.Configuration["ConnectionStrings:RangoDbConnectionString"])
 );
+
+builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+    .AddEntityFrameworkStores<RangoDbContext>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -52,12 +56,11 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-if (!app.Environment.IsDevelopment()) 
+if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler();
 }
-
-if (app.Environment.IsDevelopment()) 
+else
 {
     app.UseSwagger();
     app.UseSwaggerUI();
