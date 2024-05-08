@@ -9,9 +9,10 @@ public static class EndpointRouteBuilderExtensions
     {
         var rangosEndPoints = endpointRouteBuilder.MapGroup("/rangos")
             .RequireAuthorization();
-        var rangoIdEndPoints = rangosEndPoints.MapGroup("{rangoId:int}");
+        var rangoIdEndPoints = rangosEndPoints.MapGroup("/{rangoId:int}");
 
         var rangosComIdAndLockFilterEndpoints = endpointRouteBuilder.MapGroup("/rangos/{rangoId:int}")
+            .RequireAuthorization("RequireAdminFromBrazil")
             .RequireAuthorization()
             .AddEndpointFilter(new RangoIsLockedFilter(8))
             .AddEndpointFilter(new RangoIsLockedFilter(12));
