@@ -7,7 +7,8 @@
 
 ## :computer: Projeto
 
-Repositório com uma Minimal API para fins acadêmicos com objetivo de gerenciar listas de  `Rangos(refeições)` e seus  `Ingredientes`.
+Repositório com uma Minimal API para fins acadêmicos com objetivo de gerenciar uma lista de  `Rangos(refeições)` e seus  `Ingredientes`, 
+código fonte foi baseado no curso [ASP.NET 8 - Criando Minimal API](https://www.udemy.com/course/aspnet-minimal-api/?couponCode=LETSLEARNNOWPP)
 
 ## ✔️ Recursos Utilizados
 
@@ -17,6 +18,14 @@ Repositório com uma Minimal API para fins acadêmicos com objetivo de gerenciar
 - `Entity Framework Core`
 - `SQLite`
 - `AutoMapper`
+- `Microsoft Identity`
+- `JWT`
+- `Swagger`
+
+## :white_check_mark: Decisões Técnicas
+
+- Mantive a mesma estrutura do projeto apresentada no curso.
+- Procurei manter a maior partes dos exemplos apresentados com exceção de alguns que julguei necessário não incluir.
 
 ## :floppy_disk: Clonar Repositório
 
